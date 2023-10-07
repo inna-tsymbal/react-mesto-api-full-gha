@@ -1,0 +1,14 @@
+.page-form__title {
+  margin: 0 auto 50px;
+  font-weight: 900;
+  font-size: 24px;
+  line-height: 29px;
+}
+
+@media screen and (max-width: 610px) {
+  .page-form__title {
+    font-size: 20px;
+    line-height: 24px;
+    margin-bottom: 40px;
+  }
+}

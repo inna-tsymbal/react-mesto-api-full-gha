@@ -1,0 +1,25 @@
+.header__menu {
+  display: none;
+}
+
+@media screen and (max-width: 610px) {
+  .header__menu {
+    display: flex;
+    flex-direction: column;
+    width: 24px;
+    height: 20px;
+    cursor: pointer;
+    margin: 5px 0 31px 0;
+    justify-content: space-between;
+  }
+}
+
+@media screen and (max-width: 425px) {
+  .header__menu {
+    margin-right: 30px;
+  }
+}
+
+.header__menu_open {
+  justify-content: center;
+}

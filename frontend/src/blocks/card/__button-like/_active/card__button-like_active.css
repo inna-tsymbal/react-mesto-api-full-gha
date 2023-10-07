@@ -1,0 +1,4 @@
+.card__button-like_active {
+  background-image: url("../../../../images/element__button_active.svg");
+  transition: opacity 0.4s;
+}

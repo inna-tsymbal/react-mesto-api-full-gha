@@ -1,0 +1,14 @@
+.page-form {
+  max-width: 358px;
+  width: 100%;
+  margin: 60px auto 80px;
+  text-align: center;
+}
+
+@media screen and (max-width: 610px) {
+  .page-form {
+    max-width: 260px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+  }
+}

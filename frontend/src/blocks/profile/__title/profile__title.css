@@ -1,0 +1,16 @@
+.profile__title {
+  display: flex;
+  gap: 18px;
+  padding-bottom: 16px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  align-items: flex-start;
+}
+
+@media screen and (max-width: 610px) {
+  .profile__title {
+    gap: 10px;
+    padding-bottom: 7px;
+  }
+}

@@ -1,0 +1,19 @@
+.page-form__set {
+  max-width: 358px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  padding-bottom: 150px;
+  justify-content: space-between;
+  margin: 0 auto;
+  align-self: flex-end;
+  border: 0;
+}
+
+@media screen and (max-width: 550px) {
+  .page-form__set {
+    padding-bottom: 100px;
+  }
+}

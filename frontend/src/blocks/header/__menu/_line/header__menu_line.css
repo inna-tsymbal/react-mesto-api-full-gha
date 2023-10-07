@@ -1,0 +1,25 @@
+.header__menu_line {
+  display: none;
+}
+
+@media screen and (max-width: 610px) {
+  .header__menu_line {
+    display: block;
+    background-color: #fff;
+    height: 3px;
+    width: 100%;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .header__menu_open .header__menu_line:nth-child(1) {
+    transform: rotate(45deg) translateY(4px);
+  }
+
+  .header__menu_open .header__menu_line:nth-child(2) {
+    opacity: 0;
+  }
+
+  .header__menu_open .header__menu_line:nth-child(3) {
+    transform: rotate(-45deg) translateY(-4px);
+  }
+}

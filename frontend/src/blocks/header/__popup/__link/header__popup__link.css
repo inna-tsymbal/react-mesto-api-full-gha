@@ -1,0 +1,13 @@
+.header__popup__link {
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+  transition: 0.5s ease-in-out;
+  text-decoration: none;
+  color: #a9a9a9;
+  margin: 0 auto 40px;
+}
+
+.header__popup__link:hover {
+  opacity: 0.6;
+}

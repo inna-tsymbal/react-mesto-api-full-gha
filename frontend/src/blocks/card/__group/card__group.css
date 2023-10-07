@@ -1,0 +1,7 @@
+.card__group {
+  margin: 0;
+  max-width: 241px;
+  padding: 25px 20px 25px 21px;
+  display: flex;
+  justify-content: space-between;
+}

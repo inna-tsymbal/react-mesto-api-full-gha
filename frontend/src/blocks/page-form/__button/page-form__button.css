@@ -1,0 +1,26 @@
+.page-form__button {
+  border: none;
+  width: 100%;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+  min-height: 50px;
+  padding: 0;
+  margin: 0;
+  transition: 0.5s ease-in-out;
+  border-radius: 2px;
+}
+
+@media screen and (max-width: 550px) {
+  .page-form__button {
+    width: 238px;
+    min-height: 46px;
+    font-size: 16px;
+    line-height: 19px;
+  }
+}
+
+.page-form__button:hover {
+  opacity: 0.85;
+  cursor: pointer;
+}
