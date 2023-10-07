@@ -1,21 +1,19 @@
 /* eslint-disable linebreak-style */
-const ALLOWED_CORS = [
+const allowedCors = [
+  'https://iuliasolt.nomoredomainsrocks.ru',
+  'http://iuliasolt.nomoredomainsrocks.ru',
+  'https://localhost:3000',
   'http://localhost:3000',
-  'http://localhost:3003',
-  'https://spacex.nomoredomainsrocks.ru',
-  'https://api.spacex.nomoredomainsrocks.ru',
 ];
-
-const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
 
 module.exports = (req, res, next) => {
   const { origin } = req.headers;
   const { method } = req;
-  const requestHeaders = req.headers['access-control-request-headers'];
 
-  if (ALLOWED_CORS.includes(origin)) {
+  const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
+  const requestHeaders = req.headers['access-control-request-headers'];
+  if (allowedCors.includes(origin)) {
     res.header('Access-Control-Allow-Origin', origin);
-    res.header('Access-Control-Allow-Credentials', true);
   }
 
   if (method === 'OPTIONS') {
