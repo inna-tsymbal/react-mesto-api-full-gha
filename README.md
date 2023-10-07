@@ -9,8 +9,8 @@
 
 ## Ссылки на проект
 
-IP-адрес x.x.x.x
+IP 130.193.36.217
 
-Frontend https://...
+Frontend http://mesto.innatsymbal.nomoredomainsrocks.ru/
 
-Backend https://...
+Backend http://api.mesto.innatsymbal.nomoredomainsrocks.ru/
