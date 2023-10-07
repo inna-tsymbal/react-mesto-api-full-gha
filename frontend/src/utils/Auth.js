@@ -1,4 +1,4 @@
-const url = "https://api.mesto.innatsymbal.nomoredomainsrocks.ru/";
+const url = "https://api.mesto.innatsymbal.nomoredomainsrocks.ru";
 
 const checkResponse = (res) => {
   return res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`)

@@ -1,7 +1,7 @@
 /* eslint-disable linebreak-style */
 const allowedCors = [
-  'https://iuliasolt.nomoredomainsrocks.ru',
-  'http://iuliasolt.nomoredomainsrocks.ru',
+  'http://mesto.innatsymbal.nomoredomainsrocks.ru',
+  'https://mesto.innatsymbal.nomoredomainsrocks.ru',
   'https://localhost:3000',
   'http://localhost:3000',
 ];
