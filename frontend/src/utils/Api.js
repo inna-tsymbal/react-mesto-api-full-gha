@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 class Api {
   constructor({ url, headers }) {
     this._url = url;
@@ -14,21 +15,27 @@ class Api {
 
   getUserInfo() {
     return this._request(`${this._url}users/me/`, {
+      credentials: 'include',
       headers: this._headers,
     });
   }
 
   getInitialCards() {
     return this._request(`${this._url}cards/`, {
+      credentials: 'include',
       headers: this._headers,
     });
   }
 
   patchUserInfo(data) {
     return this._request(`${this._url}users/me/`, {
+      credentials: 'include',
       method: "PATCH",
       headers: this._headers,
-      body: JSON.stringify(data),
+      body: JSON.stringify({
+        name: data.name,
+        about: data.about
+    }),
     });
   }
 
@@ -36,13 +43,18 @@ class Api {
     return this._request(`${this._url}cards/`, {
       method: "POST",
       headers: this._headers,
-      body: JSON.stringify(data),
+      credentials: 'include',
+      body: JSON.stringify({
+        name: data.name,
+        link: data.link,
+    }),
     });
   }
 
   deleteCard(id) {
     return this._request(`${this._url}cards/${id}`, {
       method: "DELETE",
+      credentials: 'include',
       headers: this._headers,
     });
   }
@@ -50,6 +62,7 @@ class Api {
   putLikeCard(id) {
     return this._request(`${this._url}cards/${id}/likes`, {
       method: "PUT",
+      credentials: 'include',
       headers: this._headers,
     });
   }
@@ -57,20 +70,24 @@ class Api {
   deleteLikeCard(id) {
     return this._request(`${this._url}cards/${id}/likes`, {
       method: "DELETE",
+      credentials: 'include',
       headers: this._headers,
     });
   }
 
-  patchUserAvatar(data) {
+  patchUserAvatar(avatar) {
     return this._request(`${this._url}users/me/avatar`, {
       method: "PATCH",
+      credentials: 'include',
       headers: this._headers,
-      body: JSON.stringify(data),
+      body: JSON.stringify({
+        avatar: avatar,
+    }),
     });
   }
 }
 
 export const api = new Api({
   url: "https://api.mesto.innatsymbal.nomoredomainsrocks.ru/",
-  headers: {"Content-Type": "application/json"},
+  headers: {Authorization : `Bearer ${token}`},
 });

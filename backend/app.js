@@ -4,10 +4,10 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const process = require('process');
+const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const { errors } = require('celebrate');
-const cors = require('./middlewares/cors');
 const auth = require('./middlewares/auth');
 const { validateLogin, validateCreateUser } = require('./middlewares/validation');
 const { login, createUser } = require('./controllers/users');
@@ -25,14 +25,12 @@ const limiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
-
+app.use(cors());
 app.use(helmet());
 app.use(limiter);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-app.use(cors);
 
 app.use(requestLogger);
 app.get('/crash-test', () => {
