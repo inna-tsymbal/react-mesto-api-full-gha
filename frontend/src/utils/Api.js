@@ -1,8 +1,7 @@
-/* eslint-disable no-undef */
 class Api {
-  constructor({ url, headers }) {
+  constructor({ url }) {
     this._url = url;
-    this._headers = headers;
+
   }
 
   _checkResponse(res) {
@@ -13,85 +12,100 @@ class Api {
     return fetch(url, options).then(this._checkResponse);
   }
 
+  _getTokenLocalStorage() {
+    return localStorage.getItem('jwt')
+  }
+
   getUserInfo() {
+    const token = this._getTokenLocalStorage();
     return this._request(`${this._url}users/me/`, {
-      credentials: 'include',
-      headers: this._headers,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
     });
   }
 
   getInitialCards() {
+    const token = this._getTokenLocalStorage();
     return this._request(`${this._url}cards/`, {
-      credentials: 'include',
-      headers: this._headers,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
     });
   }
 
   patchUserInfo(data) {
+    const token = this._getTokenLocalStorage();
     return this._request(`${this._url}users/me/`, {
-      credentials: 'include',
       method: "PATCH",
-      headers: this._headers,
-      body: JSON.stringify({
-        name: data.name,
-        about: data.about
-    }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(data),
     });
   }
 
   postNewCard(data) {
+    const token = this._getTokenLocalStorage();
     return this._request(`${this._url}cards/`, {
       method: "POST",
-      headers: this._headers,
-      credentials: 'include',
-      body: JSON.stringify({
-        name: data.name,
-        link: data.link,
-    }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(data),
     });
   }
 
   deleteCard(id) {
+    const token = this._getTokenLocalStorage();
     return this._request(`${this._url}cards/${id}`, {
       method: "DELETE",
-      credentials: 'include',
-      headers: this._headers,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
     });
   }
 
   putLikeCard(id) {
-  
+    const token = this._getTokenLocalStorage();
     return this._request(`${this._url}cards/${id}/likes`, {
       method: "PUT",
-      credentials: 'include',
-      headers: this._headers,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
     });
   }
 
   deleteLikeCard(id) {
+    const token = this._getTokenLocalStorage();
     return this._request(`${this._url}cards/${id}/likes`, {
       method: "DELETE",
-      credentials: 'include',
-      headers: this._headers,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
     });
   }
 
   patchUserAvatar(data) {
+    const token = this._getTokenLocalStorage();
     return this._request(`${this._url}users/me/avatar`, {
       method: "PATCH",
-      credentials: 'include',
-      headers: this._headers,
-      body: JSON.stringify({
-        avatar: data.avatar,
-    }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(data),
     });
   }
 }
 
 export const api = new Api({
-  url: "https://api.mesto.innatsymbal.nomoredomainsrocks.ru/",
-  headers: {
-    'Authorization': `Bearer ${token}`,
-    'Content-Type': 'application/json',
-  },
+  url: "http://api.mesto.innatsymbal.nomoredomainsrocks.ru",
 });

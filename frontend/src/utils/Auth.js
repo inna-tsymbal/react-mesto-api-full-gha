@@ -1,4 +1,4 @@
-const url = "https://api.mesto.innatsymbal.nomoredomainsrocks.ru";
+const url = "http://api.mesto.innatsymbal.nomoredomainsrocks.ru";
 
 const checkResponse = (res) => {
   return res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`)
@@ -7,39 +7,32 @@ const checkResponse = (res) => {
 export const register = (password, email) => {
   return fetch(`${url}/signup`, {
     method: "POST",
-    credentials: 'include',
     headers: {
+      "Accept": "application/json",
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      password,
-      email,
-  }),
+    body: JSON.stringify({ password, email }),
   }).then(checkResponse)
 };
 
 export const login = (password, email) => {
   return fetch(`${url}/signin`, {
     method: "POST",
-    credentials: 'include',
     headers: {
+      "Accept": "application/json",
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      password,
-      email,
-  }),
+    body: JSON.stringify({ password, email }),
   }).then(checkResponse)
 };
 
-export const checkToken = () => {
-  const token = localStorage.getItem('token');
+export const checkToken = (token) => {
   return fetch(`${url}/users/me`, {
     method: "GET",
-    credentials: 'include',
     headers: {
+      'Accept': 'application/json',
       'Content-Type': 'application/json',
-      'Authorization' : `Bearer ${token}`,
+      'Authorization': `Bearer ${token}`
     },
   }).then(checkResponse)
 };
