@@ -71,6 +71,6 @@ class Api {
 }
 
 export const api = new Api({
-  url: "https://api.mesto.innatsymbal.nomoredomainsrocks.ru",
+  url: "https://api.mesto.innatsymbal.nomoredomainsrocks.ru/",
   headers: {"Content-Type": "application/json"},
 });

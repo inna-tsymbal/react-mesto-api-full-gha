@@ -11,6 +11,6 @@
 
 IP 130.193.36.217
 
-Frontend http://mesto.innatsymbal.nomoredomainsrocks.ru/
+Frontend http://mesto.innatsymbal.nomoredomainsrocks.ru
 
-Backend http://api.mesto.innatsymbal.nomoredomainsrocks.ru/
+Backend http://api.mesto.innatsymbal.nomoredomainsrocks.ru
