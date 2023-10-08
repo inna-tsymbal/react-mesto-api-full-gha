@@ -32,7 +32,8 @@ export const login = (password, email) => {
   }).then(checkResponse)
 };
 
-export const checkToken = (token) => {
+export const checkToken = () => {
+  const token = localStorage.getItem('token');
   return fetch(`${url}/users/me`, {
     method: "GET",
     credentials: 'include',

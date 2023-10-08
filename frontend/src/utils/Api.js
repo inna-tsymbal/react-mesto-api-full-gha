@@ -60,6 +60,7 @@ class Api {
   }
 
   putLikeCard(id) {
+  
     return this._request(`${this._url}cards/${id}/likes`, {
       method: "PUT",
       credentials: 'include',
@@ -75,13 +76,13 @@ class Api {
     });
   }
 
-  patchUserAvatar(avatar) {
+  patchUserAvatar(data) {
     return this._request(`${this._url}users/me/avatar`, {
       method: "PATCH",
       credentials: 'include',
       headers: this._headers,
       body: JSON.stringify({
-        avatar: avatar,
+        avatar: data.avatar,
     }),
     });
   }
@@ -89,5 +90,8 @@ class Api {
 
 export const api = new Api({
   url: "https://api.mesto.innatsymbal.nomoredomainsrocks.ru/",
-  headers: {Authorization : `Bearer ${token}`},
+  headers: {
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json',
+  },
 });
