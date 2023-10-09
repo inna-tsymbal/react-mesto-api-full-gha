@@ -1,110 +1,104 @@
 class Api {
-  constructor({ url }) {
-    this._url = url;
-
+  constructor(option) {
+    this._url = option.url;
   }
 
   _checkResponse(res) {
-    return res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`)
-  }
-
-  _request(url, options) {
-    return fetch(url, options).then(this._checkResponse);
-  }
-
-  _getTokenLocalStorage() {
-    return localStorage.getItem('jwt')
-  }
+    return res.ok ? res.json() : Promise.reject
+}
 
   getUserInfo() {
-    const token = this._getTokenLocalStorage();
-    return this._request(`${this._url}users/me/`, {
+    return fetch(`${this._url}/users/me`, {
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
-    });
+  })
+      .then(this._checkResponse)
   }
 
   getInitialCards() {
-    const token = this._getTokenLocalStorage();
-    return this._request(`${this._url}cards/`, {
+    return fetch(`${this._url}/cards`, {
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
-    });
+  })
+      .then(this._checkResponse)
   }
 
   patchUserInfo(data) {
-    const token = this._getTokenLocalStorage();
-    return this._request(`${this._url}users/me/`, {
-      method: "PATCH",
+    return fetch(`${this._url}/users/me`, {
+      method: 'PATCH',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(data),
-    });
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+      body: JSON.stringify({
+          name: data.username,
+          about: data.description,
+      })
+  })
+      .then(this._checkResponse)
   }
 
   postNewCard(data) {
-    const token = this._getTokenLocalStorage();
-    return this._request(`${this._url}cards/`, {
-      method: "POST",
+    return fetch(`${this._url}/cards`, {
+      method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(data),
-    });
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+      body: JSON.stringify({
+          name: data.placename,
+          link: data.placelink,
+      })
+  })
+      .then(this._checkResponse)
   }
 
-  deleteCard(id) {
-    const token = this._getTokenLocalStorage();
-    return this._request(`${this._url}cards/${id}`, {
-      method: "DELETE",
+  deleteCard(cardId) {
+    return fetch(`${this._url}/cards/${cardId}`, {
+      method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-    });
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+  })
+      .then(this._checkResponse)
   }
 
-  putLikeCard(id) {
-    const token = this._getTokenLocalStorage();
-    return this._request(`${this._url}cards/${id}/likes`, {
-      method: "PUT",
+  putLikeCard(cardId) {
+    return fetch(`${this._url}/cards/${cardId}/likes`, {
+      method: 'PUT',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-    });
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+  })
+      .then(this._checkResponse)
   }
 
-  deleteLikeCard(id) {
-    const token = this._getTokenLocalStorage();
-    return this._request(`${this._url}cards/${id}/likes`, {
-      method: "DELETE",
+  deleteLikeCard(cardId) {
+    return fetch(`${this._url}/cards/${cardId}`, {
+      method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-    });
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+  })
+      .then(this._checkResponse)
   }
 
   patchUserAvatar(data) {
-    const token = this._getTokenLocalStorage();
-    return this._request(`${this._url}users/me/avatar`, {
-      method: "PATCH",
+    return fetch(`${this._url}/users/me/avatar`, {
+      method: 'PATCH',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(data),
-    });
+          "Content-Type": "application/json",
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+      body: JSON.stringify({
+          avatar: data.userphoto,
+      })
+  })
+      .then(this._checkResponse)
+    }
   }
-}
 
 export const api = new Api({
   url: "http://api.mesto.innatsymbal.nomoredomainsrocks.ru",

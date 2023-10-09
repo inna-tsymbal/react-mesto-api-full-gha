@@ -1,38 +1,38 @@
-const url = "http://api.mesto.innatsymbal.nomoredomainsrocks.ru";
+export const url = "http://api.mesto.innatsymbal.nomoredomainsrocks.ru";
 
-const checkResponse = (res) => {
-  return res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`)
+function handleReply(res) {
+  if (res.ok) {
+    return res.json();
+  }
+  return Promise.reject(`Ошибка: ${res.status}`);
 }
 
-export const register = (password, email) => {
+export const register = (data) => {
   return fetch(`${url}/signup`, {
     method: "POST",
     headers: {
-      "Accept": "application/json",
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ password, email }),
-  }).then(checkResponse)
+    body: JSON.stringify(data),
+  }).then(handleReply);
 };
 
-export const login = (password, email) => {
+export const login = (data) => {
   return fetch(`${url}/signin`, {
     method: "POST",
     headers: {
-      "Accept": "application/json",
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ password, email }),
-  }).then(checkResponse)
+    body: JSON.stringify(data),
+  }).then(handleReply);
 };
 
 export const checkToken = (token) => {
   return fetch(`${url}/users/me`, {
     method: "GET",
     headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
+      "Content-Type": "application/json",
+      'Authorization': `Bearer ${token}`,
     },
-  }).then(checkResponse)
+  }).then(handleReply);
 };
