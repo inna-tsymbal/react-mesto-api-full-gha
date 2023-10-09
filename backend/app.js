@@ -10,15 +10,14 @@ const cors = require('cors');
 const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { validateLogin, validateCreateUser } = require('./middlewares/validation');
-const { login, createUser } = require('./controllers/users');
+const { login, createUser, logout } = require('./controllers/users');
 const NotFoundError = require('./errors/NotFoundError');
 
 const app = express();
-app.use(cors());
 
-const { PORT = 3000, DB_URL = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
+const { PORT = 3000 } = process.env;
 
-mongoose.connect(DB_URL);
+mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -31,8 +30,12 @@ app.use(helmet());
 app.use(limiter);
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
 app.use(requestLogger);
+app.use(cors({
+  origin: ['https://mesto.innatsymbal.nomoredomainsrocks.ru', 'localhost:3000'],
+  credentials: true,
+}));
 app.get('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');
@@ -40,9 +43,10 @@ app.get('/crash-test', () => {
 });
 app.post('/signin', validateLogin, login);
 app.post('/signup', validateCreateUser, createUser);
+app.post('/signout', auth, logout);
 app.use(auth);
-app.use('/users', require('./routes/users'));
-app.use('/cards', require('./routes/cards'));
+app.use('/users', auth, require('./routes/users'));
+app.use('/cards', auth, require('./routes/cards'));
 
 app.use('*', (req, res, next) => next(new NotFoundError('Такая страница не существует.')));
 app.use(errorLogger);

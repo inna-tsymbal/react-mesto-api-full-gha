@@ -1,105 +1,118 @@
 class Api {
   constructor(option) {
-    this._url = option.url;
+    this._baseUrl = options.baseUrl;
+    this._headers = options.headers;
   }
 
-  _checkResponse(res) {
-    return res.ok ? res.json() : Promise.reject
+  _testData(res) {
+    if (res.ok) {
+        return res.json();
+    }
+
+    return Promise.reject(`Ошибка: ${res.status}`);
 }
 
   getUserInfo() {
-    return fetch(`${this._url}/users/me`, {
+    return fetch(`${this._baseUrl}/users/me`, {
+      credentials: 'include',
       headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          ...this._headers
       }
   })
-      .then(this._checkResponse)
+      .then(res => this._testData(res));
   }
 
   getInitialCards() {
-    return fetch(`${this._url}/cards`, {
+    return fetch(`${this._baseUrl}/cards`, {
+      credentials: 'include',
       headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          ...this._headers
       }
   })
-      .then(this._checkResponse)
+      .then(res => this._testData(res));
   }
 
-  patchUserInfo(data) {
-    return fetch(`${this._url}/users/me`, {
+  patchUserInfo(name, about) {
+    return fetch(`${this._baseUrl}/users/me`, {
       method: 'PATCH',
+      credentials: 'include',
       headers: {
-          "Content-Type": "application/json",
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
+          ...this._headers
+      },
       body: JSON.stringify({
-          name: data.username,
-          about: data.description,
+          name: name,
+          about: about
       })
   })
-      .then(this._checkResponse)
+      .then(res => this._testData(res));
   }
 
-  postNewCard(data) {
-    return fetch(`${this._url}/cards`, {
+  postNewCard(name, link) {
+    return fetch(`${this._baseUrl}/cards`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
-          "Content-Type": "application/json",
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
+          ...this._headers
+      },
       body: JSON.stringify({
-          name: data.placename,
-          link: data.placelink,
+          name: name,
+          link: link
       })
   })
-      .then(this._checkResponse)
+      .then(res => this._testData(res));
   }
 
-  deleteCard(cardId) {
-    return fetch(`${this._url}/cards/${cardId}`, {
+  deleteCard(id) {
+    return fetch(`${this._baseUrl}/cards/${id}`, {
       method: 'DELETE',
+      credentials: 'include',
       headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          ...this._headers
       }
   })
-      .then(this._checkResponse)
+      .then(res => this._testData(res));
   }
 
-  putLikeCard(cardId) {
-    return fetch(`${this._url}/cards/${cardId}/likes`, {
+  putLikeCard(id) {
+    return fetch(`${this._baseUrl}/cards/${id}/likes`, {
       method: 'PUT',
+      credentials: 'include',
       headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          ...this._headers
       }
   })
-      .then(this._checkResponse)
+      .then(res => this._testData(res));
   }
 
-  deleteLikeCard(cardId) {
-    return fetch(`${this._url}/cards/${cardId}`, {
+  deleteLikeCard(id) {
+    return fetch(`${this._baseUrl}/cards/${id}/likes`, {
       method: 'DELETE',
+      credentials: 'include',
       headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          ...this._headers
       }
   })
-      .then(this._checkResponse)
+      .then(res => this._testData(res));
   }
 
-  patchUserAvatar(data) {
-    return fetch(`${this._url}/users/me/avatar`, {
+  patchUserAvatar(link) {
+    return fetch(`${this._baseUrl}/users/me/avatar`, {
       method: 'PATCH',
+      credentials: 'include',
       headers: {
-          "Content-Type": "application/json",
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
+          ...this._headers
+      },
       body: JSON.stringify({
-          avatar: data.userphoto,
+          avatar: link
       })
   })
-      .then(this._checkResponse)
-    }
+      .then(res => this._testData(res));
+}
   }
 
 export const api = new Api({
-  url: "http://api.mesto.innatsymbal.nomoredomainsrocks.ru",
+  baseUrl: "http://api.mesto.innatsymbal.nomoredomainsrocks.ru",
+  headers: {
+    'Content-Type': 'application/json'
+  }
 });
