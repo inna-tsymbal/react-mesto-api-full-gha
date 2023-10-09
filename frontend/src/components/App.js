@@ -14,7 +14,7 @@ import Login from "./Login.js";
 import Register from "./Register.js";
 import ProtectedRoute from "./ProtectedRoute.js";
 import InfoTooltip from "./InfoTooltip.js";
-import { authApi } from "../utils/Auth.js";
+import { register, login, checkToken } from "../utils/Auth.js";
 
 function App() {
   const navigate = useNavigate();
@@ -34,26 +34,39 @@ function App() {
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
 
   useEffect(() => {
+    checkToken();
+  }, [])
+  
+  useEffect(() => {
     if (isLoggedIn) {
       Promise.all([api.getUserInfo(), api.getInitialCards()])
         .then(([userData, cards]) => {
           console.log(userData, cards);
-          setCurrentUser(userData.data);
-          setCards(cards.data);
+          setCurrentUser(userData);
+          setCards(cards);
         })
         .catch((err) => console.log(err));
     }
   }, [isLoggedIn]);
 
   useEffect(() => {
-    authApi.getContent()
-    .then((res) => {
+    const jwt = localStorage.getItem("jwt");
+    if (jwt) {
+      checkToken(jwt)
+        .then((res) => {
           setUserEmail(res.data.email);
           setIsLoggedIn(true);
           navigate("/");
         })
         .catch((err) => console.log(err));
-  }, []);
+    }
+  }, [navigate]);
+
+  const handleSignOut = () => {
+    localStorage.removeItem("jwt");
+    setUserEmail("");
+    setIsLoggedIn(false);
+  };
 
   const handleEditAvatarClick = () => {
     setEditAvatarPopupOpen(true);
@@ -83,7 +96,7 @@ function App() {
         .putLikeCard(card._id)
         .then((newCard) => {
           setCards((state) =>
-          state.map((c) => c._id === card._id ? newCard.data : c)
+            state.map((c) => (c._id === card._id ? newCard : c))
           );
         })
         .catch((err) => {
@@ -94,7 +107,7 @@ function App() {
         .deleteLikeCard(card._id)
         .then((newCard) => {
           setCards((state) =>
-          state.map((c) => c._id === card._id ? newCard.data : c)
+            state.map((c) => (c._id === card._id ? newCard : c))
           );
         })
         .catch((err) => {
@@ -103,16 +116,12 @@ function App() {
     }
   };
 
-  const handleUpdateUser = ({ name, about }) => {
+  const handleUpdateUser = (data) => {
     setIsProcessStatus(true);
     api
-      .patchUserInfo(name, about)
-      .then(res => {
-        setCurrentUser({
-          ...currentUser,
-          name: res.data.name,
-          about: res.data.about
-        });
+      .patchUserInfo(data)
+      .then((newUser) => {
+        setCurrentUser(newUser);
         closeAllPopups();
       })
       .catch((err) => {
@@ -123,15 +132,12 @@ function App() {
       });
   };
 
-  const handleUpdateAvatar = (link) => {
+  const handleUpdateAvatar = (data) => {
     setIsProcessStatus(true);
     api
-      .patchUserAvatar(link)
-      .then(res => {
-        setCurrentUser({
-          ...currentUser,
-          avatar: res.data.avatar
-        });
+      .patchUserAvatar(data)
+      .then((newAvatar) => {
+        setCurrentUser(newAvatar);
         closeAllPopups();
       })
       .catch((err) => {
@@ -142,12 +148,12 @@ function App() {
       });
   };
 
-  const handleAddPlaceSubmit = ({ title, link }) => {
+  const handleAddPlaceSubmit = (data) => {
     setIsProcessStatus(true);
     api
-      .postNewCard(title, link)
+      .postNewCard(data)
       .then((newCard) => {
-        setCards([newCard.data, ...cards]);
+        setCards([newCard, ...cards]);
         closeAllPopups();
       })
       .catch((err) => {
@@ -174,9 +180,9 @@ function App() {
       });
   };
 
-  function handleRegister(email, password) {
+  function handleRegister(password, email) {
     setIsProcessStatus(true);
-    authApi.register(email, password)
+    register(password, email)
       .then(() => {
         setIsAuthStatus(true);
         setPopupMessageStatus({
@@ -197,9 +203,9 @@ function App() {
       });
   }
 
-  function handleLogin(email, password) {
+  function handleLogin(password, email) {
     setIsProcessStatus(true);
-    authApi.login(email, password)
+    login(password, email)
       .then((res) => {
         setIsLoggedIn(true);
         setUserEmail(email);
@@ -215,12 +221,6 @@ function App() {
         setIsInfoTooltipOpen(true);
       })
       .finally(() => setIsProcessStatus(false));
-  }
-
-  function handleSignOut() {
-    return authApi.logout()
-      .then(() => setIsLoggedIn(false))
-      .catch(err => console.log(err));
   }
 
   const closeAllPopups = () => {

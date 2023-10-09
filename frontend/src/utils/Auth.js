@@ -1,60 +1,31 @@
-class AuthApi {
-  constructor(options) {
-    this._baseUrl = options.baseUrl;
-    this._headers = options.headers;
-  }
+export const url = "https://api.mesto.innatsymbal.nomoredomainsrocks.ru";
 
-  _testData(res) {
-    if (res.ok) {
-      return res.json();
-    }
-    return res.json().then(res => Promise.reject(res.message || res.error));
-  }
-
-  register(email, password) {
-    return fetch(`${this._baseUrl}/signup`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: this._headers,
-      body: JSON.stringify({ password, email })
-    })
-      .then(res => this._testData(res));
-  }
-
-  login(email, password) {
-    return fetch(`${this._baseUrl}/signin`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: this._headers,
-      body: JSON.stringify({ password, email })
-    })
-      .then(res => this._testData(res));
-  }
-
-  logout() {
-    return fetch(`${this._baseUrl}/signout`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: this._headers,
-    })
-      .then(res => this._testData(res));
-  }
-
-  getContent() {
-    return fetch(`${this._baseUrl}/users/me`, {
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        ...this._headers,
-      }
-    })
-      .then(res => this._testData(res))
-  }
+const checkResponse = (res) => {
+  return res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`)
 }
 
-export const authApi = new AuthApi({
-  baseUrl: 'https://api.mesto.innatsymbal.nomoredomainsrocks.ru',
-  headers: {
-    'Content-Type': 'application/json'
-  }
-});
+export const register = (password, email) => {
+  return fetch(`${url}/signup`, {
+    method: "POST",
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ password, email }),
+  }).then(checkResponse)
+};
+
+export const login = (password, email) => {
+  return fetch(`${url}/signin`, {
+    method: "POST",
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ password, email }),
+  }).then(checkResponse)
+};
+
+export const checkToken = () => {
+  return fetch(`${url}/users/me`, {credentials: 'include'}).then(checkResponse)
+};
