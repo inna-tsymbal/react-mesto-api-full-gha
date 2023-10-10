@@ -45,24 +45,24 @@ class Api {
     });
   }
 
-  deleteCard(id) {
-    return this._request(`${this._url}cards/${id}`, {
+  deleteCard(cardId) {
+    return this._request(`${this._url}cards/${cardId}`, {
       method: "DELETE",
       headers: this._headers,
       credentials: this._credentials,
     });
   }
 
-  putLikeCard(id) {
-    return this._request(`${this._url}cards/${id}/likes`, {
+  putLikeCard(cardId) {
+    return this._request(`${this._url}cards/${cardId}/likes`, {
       method: "PUT",
       headers: this._headers,
       credentials: this._credentials,
     });
   }
 
-  deleteLikeCard(id) {
-    return this._request(`${this._url}cards/${id}/likes`, {
+  deleteLikeCard(cardId) {
+    return this._request(`${this._url}cards/${cardId}/likes`, {
       method: "DELETE",
       headers: this._headers,
       credentials: this._credentials,
