@@ -14,7 +14,9 @@ import Login from "./Login.js";
 import Register from "./Register.js";
 import ProtectedRoute from "./ProtectedRoute.js";
 import InfoTooltip from "./InfoTooltip.js";
-import { register, login, checkToken } from "../utils/Auth.js";
+import * as auth from "../utils/Auth.js";
+
+login
 
 function App() {
   const navigate = useNavigate();
@@ -44,26 +46,31 @@ function App() {
           console.log(userData, cards);
           setCurrentUser(userData);
           setCards(cards);
+          setUserEmail(userData.email);
         })
         .catch((err) => console.log(err));
     }
   }, [isLoggedIn]);
 
-  useEffect(() => {
-    const jwt = localStorage.getItem("jwt");
+  const checkToken = () => {
+    const jwt = localStorage.getItem('jwtM');
     if (jwt) {
-      checkToken(jwt)
-        .then((res) => {
-          setUserEmail(res.data.email);
+      auth.checkToken()
+      .then((res) => {
+        if (res) {
           setIsLoggedIn(true);
-          navigate("/");
-        })
-        .catch((err) => console.log(err));
-    }
-  }, [navigate]);
+          setUserEmail(res.data.email);
+          navigate("/", {replace: true})
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  }
 
   const handleSignOut = () => {
-    localStorage.removeItem("jwt");
+    localStorage.removeItem("jwtM");
     setUserEmail("");
     setIsLoggedIn(false);
   };
@@ -180,15 +187,15 @@ function App() {
       });
   };
 
-  function handleRegister(password, email) {
+  function handleRegister({password, email}) {
     setIsProcessStatus(true);
-    register(password, email)
+    auth.register(password, email)
       .then(() => {
         setIsAuthStatus(true);
         setPopupMessageStatus({
           text: "Вы успешно зарегистрировались!",
         });
-        navigate("/sign-in");
+        navigate("/sign-in", { replace: true });
       })
       .catch((err) => {
         console.log(err);
@@ -203,14 +210,14 @@ function App() {
       });
   }
 
-  function handleLogin(password, email) {
+  function handleLogin({password, email}) {
     setIsProcessStatus(true);
-    login(password, email)
+    auth.login(password, email)
       .then((res) => {
         setIsLoggedIn(true);
         setUserEmail(email);
-        navigate("/");
-        localStorage.setItem("jwt", res.token);
+        navigate("/", { replace: true });
+        localStorage.setItem('jwtM', true);
       })
       .catch((err) => {
         console.log(err);

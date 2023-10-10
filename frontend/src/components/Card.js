@@ -4,12 +4,12 @@ import { CurrentUserContext } from "../contexts/CurrentUserContext";
 export default function Card({ card, onCardClick, onCardLike, onCardDelete }) {
   const currentUser = useContext(CurrentUserContext);
 
-  const isOwn = card.owner._id === currentUser._id;
+  const isOwn = card.owner === currentUser._id;
   const cardDeleteButtonClassName = `card__delete ${
     !isOwn && "card__delete_inactive"
   }`;
 
-  const isLiked = card.likes.some((i) => i._id === currentUser._id);
+  const isLiked = card.likes.some(i => i === currentUser._id);
   const cardLikeButtonClassName = `card__button-like ${
     isLiked && "card__button-like_active"
   }`;
@@ -19,11 +19,11 @@ export default function Card({ card, onCardClick, onCardLike, onCardDelete }) {
   }
 
   function handleDeleteClick() {
-    onCardDelete(card);
+    onCardDelete({ _id: card._id });
   }
 
   function handleClick() {
-    onCardClick(card);
+    onCardClick({ name: card.name, link: card.link});
   }
 
   return (
