@@ -14,11 +14,11 @@ module.exports.createCard = (req, res, next) => {
   Card.create({ name, link, owner: req.user._id })
     .then((card) => res.status(201).send(card))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return next(new BadRequestError('Переданы некорректные данные'));
-      }
       if (err.name === 'CastError') {
         return next(new BadRequestError('Передан несуществующий id'));
+      }
+      if (err.name === 'ValidationError') {
+        return next(new BadRequestError('Переданы некорректные данные'));
       }
       return next(err);
     });
@@ -41,11 +41,12 @@ module.exports.deleteCard = (req, res, next) => {
   Card.findById(cardId)
     .orFail(new NotFoundError('Карточка с указанным id не найдена'))
     .then((card) => {
-      if (!card.owner.equals(req.user._id)) {
-        next(new ForbiddenError('Удалить карточку с указанным _id нельзя'));
+      if (card.owner.equals(req.user._id)) {
+        return Card.deleteOne(card)
+          .then(() => res.send({ message: 'Карточка удалена' }))
+          .catch(next);
       }
-      Card.deleteOne(card)
-        .then(res.send(card));
+      throw new ForbiddenError('Удалить карточку с указанным _id нельзя');
     })
     .catch((err) => {
       if (err.name === 'CastError') {
