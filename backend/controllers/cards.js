@@ -17,6 +17,9 @@ module.exports.createCard = (req, res, next) => {
       if (err.name === 'ValidationError') {
         return next(new BadRequestError('Переданы некорректные данные'));
       }
+      if (err.name === 'CastError') {
+        return next(new BadRequestError('Передан несуществующий id'));
+      }
       return next(err);
     });
 };
@@ -24,7 +27,7 @@ module.exports.createCard = (req, res, next) => {
 module.exports.likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(req.params.cardId, { $addToSet: { likes: req.user._id } }, { new: true })
     .orFail(new NotFoundError('Передан несуществующий id'))
-    .then((card) => res.status(201).send(card))
+    .then((likes) => res.status(201).send(likes))
     .catch((err) => {
       if (err.name === 'CastError') {
         return next(new BadRequestError('Переданы некорректные данные'));
@@ -55,7 +58,7 @@ module.exports.deleteCard = (req, res, next) => {
 module.exports.dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(req.params.cardId, { $pull: { likes: req.user._id } }, { new: true })
     .orFail(new NotFoundError('Передан несуществующий id'))
-    .then((card) => res.status(200).send(card))
+    .then((likes) => res.status(200).send(likes))
     .catch((err) => {
       if (err.name === 'CastError') {
         return next(new BadRequestError('Переданы некорректные данные'));

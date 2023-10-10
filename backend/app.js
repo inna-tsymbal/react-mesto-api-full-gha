@@ -1,5 +1,3 @@
-/* eslint-disable import/newline-after-import */
-/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-console */
 require('dotenv').config();
 const express = require('express');
@@ -10,26 +8,23 @@ const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const router = require('./routes/index');
+const errorsHandler = require('./middlewares/errorHandler');
 const cors = require('./middlewares/cors');
-const auth = require('./middlewares/auth');
-const { validateLogin, validateCreateUser } = require('./middlewares/validation');
-const { login, createUser } = require('./controllers/users');
-
-const NotFoundError = require('./errors/NotFoundError');
 
 const { PORT = 3000, DB_URL = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
-
-mongoose.connect(DB_URL, {
-  useNewUrlParser: true,
-}).then(() => {
-  console.log('Connected to DB');
-});
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
   standardHeaders: true,
   legacyHeaders: false,
+});
+
+mongoose.connect(DB_URL, {
+  useNewUrlParser: true,
+}).then(() => {
+  console.log('Connected to DB');
 });
 
 const app = express();
@@ -47,21 +42,12 @@ app.get('/crash-test', () => {
     throw new Error('Сервер сейчас упадёт');
   }, 0);
 });
-app.post('/signin', validateLogin, login);
-app.post('/signup', validateCreateUser, createUser);
-app.use(auth);
-app.use('/users', require('./routes/users'));
-app.use('/cards', require('./routes/cards'));
-app.use('*', (req, res, next) => next(new NotFoundError('Такая страница не существует.')));
+app.use(router);
 
 app.use(errorLogger);
 
 app.use(errors());
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message = 'На сервере произошла ошибка.' } = err;
-  res.status(statusCode).send({ message });
-  next();
-});
+app.use(errorsHandler);
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
