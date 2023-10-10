@@ -57,7 +57,6 @@ function App() {
       .then((res) => {
         if (res) {
           setIsLoggedIn(true);
-          setUserEmail(res.data.email);
           navigate("/", {replace: true})
         }
       })
@@ -190,10 +189,10 @@ function App() {
     auth.register(password, email)
       .then(() => {
         setIsAuthStatus(true);
+        navigate("/sign-in", { replace: true });
         setPopupMessageStatus({
           text: "Вы успешно зарегистрировались!",
         });
-        navigate("/sign-in", { replace: true });
       })
       .catch((err) => {
         console.log(err);
@@ -211,7 +210,7 @@ function App() {
   function handleLogin({password, email}) {
     setIsProcessStatus(true);
     auth.login(password, email)
-      .then((res) => {
+      .then((data) => {
         setIsLoggedIn(true);
         setUserEmail(email);
         navigate("/", { replace: true });
