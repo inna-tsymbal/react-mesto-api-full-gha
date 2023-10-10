@@ -34,9 +34,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(cookieParser());
-app.use(limiter);
 
 app.use(requestLogger);
+app.use(limiter);
 app.get('/crash-test', () => {
   setTimeout(() => {
     throw new Error('Сервер сейчас упадёт');

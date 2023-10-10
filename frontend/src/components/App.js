@@ -16,8 +16,6 @@ import ProtectedRoute from "./ProtectedRoute.js";
 import InfoTooltip from "./InfoTooltip.js";
 import * as auth from "../utils/Auth.js";
 
-login
-
 function App() {
   const navigate = useNavigate();
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
