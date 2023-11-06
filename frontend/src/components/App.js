@@ -51,7 +51,7 @@ function App() {
   }, [isLoggedIn]);
 
   const checkToken = () => {
-    const jwt = localStorage.getItem('jwtM');
+    const jwt = localStorage.getItem('jwt');
     if (jwt) {
       auth.checkToken()
       .then((res) => {
@@ -67,7 +67,7 @@ function App() {
   }
 
   const handleSignOut = () => {
-    localStorage.removeItem("jwtM");
+    localStorage.removeItem("jwt");
     setUserEmail("");
     setIsLoggedIn(false);
   };
@@ -184,9 +184,9 @@ function App() {
       });
   };
 
-  function handleRegister({password, email}) {
+  function handleRegister(email, password) {
     setIsProcessStatus(true);
-    auth.register(password, email)
+    auth.register(email, password)
       .then(() => {
         setIsAuthStatus(true);
         navigate("/sign-in", { replace: true });
@@ -207,14 +207,14 @@ function App() {
       });
   }
 
-  function handleLogin({password, email}) {
+  function handleLogin(email, password) {
     setIsProcessStatus(true);
-    auth.login(password, email)
+    auth.login(email, password)
       .then((data) => {
         setIsLoggedIn(true);
         setUserEmail(email);
         navigate("/", { replace: true });
-        localStorage.setItem('jwtM', true);
+        localStorage.setItem('jwtM', data.token);
       })
       .catch((err) => {
         console.log(err);
