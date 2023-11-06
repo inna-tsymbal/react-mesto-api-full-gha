@@ -8,7 +8,7 @@ export default function Register({ register, isLoggedIn, isLoading }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    register(values.password, values.email);
+    register(values.email, values.password);
   }
 
   useEffect(() => {

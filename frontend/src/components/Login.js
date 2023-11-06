@@ -8,7 +8,7 @@ export default function Login({ login, isLoggedIn, isLoading }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    login(values.password, values.email);
+    login(values.email, values.password);
   }
 
   useEffect(() => {
