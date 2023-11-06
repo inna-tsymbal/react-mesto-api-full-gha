@@ -10,7 +10,7 @@
 
 ## Ссылки на проект
 
-IP 84.252.131.20
+IP 158.160.119.63
 
 Frontend http://mesto.innatsymbal.nomoredomainsrocks.ru
 
