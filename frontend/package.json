@@ -17,7 +17,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "npm run build && scp -r ./build/* inna@84.252.131.20:/home/inna/react-mesto-api-full-gha/frontend/build"
+    "deploy": "npm run build && scp -r ./build/* inna@158.160.119.63:/home/inna/react-mesto-api-full-gha/frontend/build"
   },
   "eslintConfig": {
     "extends": [
