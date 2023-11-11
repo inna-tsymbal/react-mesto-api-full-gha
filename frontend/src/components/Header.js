@@ -3,6 +3,7 @@ import { Routes, Route, Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 
 export default function Header({ email, logout }) {
+  const [userEmail, setUserEmail] = useState('');
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const location = useLocation();
 
