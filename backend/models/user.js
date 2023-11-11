@@ -8,16 +8,16 @@ const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
-      minlength: 2,
-      maxlength: 30,
+      required: false,
+      minlength: [2, 'Минимальная длина поля - 2'],
+      maxlength: [30, 'Максимальная длина поля - 30'],
       default: 'Жак-Ив Кусто',
     },
     about: {
       type: String,
-      required: true,
-      minlength: 2,
-      maxlength: 30,
+      required: false,
+      minlength: [2, 'Минимальная длина поля - 2'],
+      maxlength: [30, 'Максимальная длина поля - 30'],
       default: 'Исследователь',
     },
     avatar: {
@@ -26,12 +26,12 @@ const userSchema = new mongoose.Schema(
         validator: (v) => validator.isURL(v),
         message: 'Некорректный URL',
       },
-      required: true,
+      required: false,
       default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     },
     email: {
       type: String,
-      required: true,
+      required: [true, 'Поле должно быть заполнено'],
       unique: true,
       validate: {
         validator: (v) => validator.isEmail(v),
@@ -40,7 +40,7 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: [true, 'Поле должно быть заполнено'],
       select: false,
     },
   },
@@ -51,12 +51,12 @@ userSchema.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        throw new UnauthorizedError('Неправильные почта или пароль');
+        return Promise.reject(new UnauthorizedError('Неправильные почта или пароль'));
       }
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            throw new UnauthorizedError('Неправильные почта или пароль');
+            return Promise.reject(new UnauthorizedError('Неправильные почта или пароль'));
           }
           return user;
         });

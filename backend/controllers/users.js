@@ -1,5 +1,5 @@
-const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const BadRequestError = require('../errors/BadRequestError');
 const NotFoundError = require('../errors/NotFoundError');
@@ -45,7 +45,7 @@ module.exports.getUserById = (req, res, next) => {
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
-        return next(new BadRequestError('Переданы некорректные данные'));
+        return next(new BadRequestError('Передан некорректный id пользователя'));
       }
       return next(err);
     });
@@ -85,6 +85,9 @@ module.exports.updateUser = (req, res, next) => {
       if (err.name === 'ValidationError') {
         return next(new BadRequestError('Переданы некорректные данные'));
       }
+      if (err.name === 'CastError') {
+        return next(new BadRequestError('Передан некорректный id пользователя'));
+      }
       return next(err);
     });
 };
@@ -97,6 +100,9 @@ module.exports.updateAvatar = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return next(new BadRequestError('Переданы некорректные данные'));
+      }
+      if (err.name === 'CastError') {
+        return next(new BadRequestError('Передан некорректный id пользователя'));
       }
       return next(err);
     });

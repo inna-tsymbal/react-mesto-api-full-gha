@@ -14,34 +14,34 @@ class Api {
   }
 
   getUserInfo() {
-    return this._request(`${this._url}users/me/`, {
+    return this._request(`${this._url}users/me`, {
       headers: this._headers,
       credentials: this._credentials,
     });
   }
 
   getInitialCards() {
-    return this._request(`${this._url}cards/`, {
+    return this._request(`${this._url}cards`, {
       headers: this._headers,
       credentials: this._credentials,
     });
   }
 
-  patchUserInfo(data) {
-    return this._request(`${this._url}users/me/`, {
+  patchUserInfo({ name, about }) {
+    return this._request(`${this._url}users/me`, {
       method: "PATCH",
       headers: this._headers,
       credentials: this._credentials,
-      body: JSON.stringify(data),
+      body: JSON.stringify({ name, about }),
     });
   }
 
-  postNewCard(data) {
-    return this._request(`${this._url}cards/`, {
+  postNewCard({ name, link }) {
+    return this._request(`${this._url}cards`, {
       method: "POST",
       headers: this._headers,
       credentials: this._credentials,
-      body: JSON.stringify(data),
+      body: JSON.stringify({ name, link }),
     });
   }
 
@@ -69,12 +69,12 @@ class Api {
     });
   }
 
-  patchUserAvatar(data) {
+  patchUserAvatar({ avatar }) {
     return this._request(`${this._url}users/me/avatar`, {
       method: "PATCH",
       headers: this._headers,
       credentials: this._credentials,
-      body: JSON.stringify(data),
+      body: JSON.stringify({ avatar }),
     });
   }
 }

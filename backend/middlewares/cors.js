@@ -1,5 +1,3 @@
-/* eslint-disable linebreak-style */
-/* eslint-disable eol-last */
 const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
 
 const allowedCors = [

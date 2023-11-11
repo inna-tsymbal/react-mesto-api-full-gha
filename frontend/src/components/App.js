@@ -26,7 +26,7 @@ function App() {
   const [cards, setCards] = useState([]);
   const [currentUser, setCurrentUser] = useState({});
 
-  const [userEmail, setUserEmail] = useState("");
+  const [email, setUserEmail] = useState("");
   const [popupMessageStatus, setPopupMessageStatus] = useState({ message: "" });
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAuthStatus, setIsAuthStatus] = useState(false);
@@ -51,7 +51,7 @@ function App() {
   }, [isLoggedIn]);
 
   const checkToken = () => {
-    const jwt = localStorage.getItem('jwt');
+    const jwt = localStorage.getItem('jwtM');
     if (jwt) {
       auth.checkToken()
       .then((res) => {
@@ -120,10 +120,10 @@ function App() {
     }
   };
 
-  const handleUpdateUser = (data) => {
+  const handleUpdateUser = ({ name, about }) => {
     setIsProcessStatus(true);
     api
-      .patchUserInfo(data)
+      .patchUserInfo({ name, about })
       .then((newUser) => {
         setCurrentUser(newUser);
         closeAllPopups();
@@ -136,10 +136,10 @@ function App() {
       });
   };
 
-  const handleUpdateAvatar = (data) => {
+  const handleUpdateAvatar = ({ avatar }) => {
     setIsProcessStatus(true);
     api
-      .patchUserAvatar(data)
+      .patchUserAvatar({ avatar })
       .then((newAvatar) => {
         setCurrentUser(newAvatar);
         closeAllPopups();
@@ -152,10 +152,10 @@ function App() {
       });
   };
 
-  const handleAddPlaceSubmit = (data) => {
+  const handleAddPlaceSubmit = ({ name, link }) => {
     setIsProcessStatus(true);
     api
-      .postNewCard(data)
+      .postNewCard({ name, link })
       .then((newCard) => {
         setCards([newCard, ...cards]);
         closeAllPopups();
@@ -184,9 +184,9 @@ function App() {
       });
   };
 
-  function handleRegister(email, password) {
+  function handleRegister({password, email}) {
     setIsProcessStatus(true);
-    auth.register(email, password)
+    auth.register(password, email)
       .then(() => {
         setIsAuthStatus(true);
         navigate("/sign-in", { replace: true });
@@ -207,14 +207,14 @@ function App() {
       });
   }
 
-  function handleLogin(email, password) {
+  function handleLogin({password, email}) {
     setIsProcessStatus(true);
-    auth.login(email, password)
+    auth.login(password, email)
       .then((data) => {
         setIsLoggedIn(true);
         setUserEmail(email);
         navigate("/", { replace: true });
-        localStorage.setItem('jwtM', data.token);
+        localStorage.setItem('jwtM', true);
       })
       .catch((err) => {
         console.log(err);
@@ -239,7 +239,7 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header email={userEmail} logout={handleSignOut} />
+        <Header email={email} logout={handleSignOut} />
         <Routes>
           <Route
             path="/"

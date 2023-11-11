@@ -23,7 +23,7 @@ export default function Card({ card, onCardClick, onCardLike, onCardDelete }) {
   }
 
   function handleClick() {
-    onCardClick({ name: card.name, link: card.link});
+    onCardClick({name: card.name, link: card.link});
   }
 
   return (
