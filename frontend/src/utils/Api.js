@@ -14,21 +14,21 @@ class Api {
   }
 
   getUserInfo() {
-    return this._request(`${this._url}/users/me`, {
+    return this._request(`${this._url}users/me`, {
       headers: this._headers,
       credentials: this._credentials,
     });
   }
 
   getInitialCards() {
-    return this._request(`${this._url}/cards`, {
+    return this._request(`${this._url}cards`, {
       headers: this._headers,
       credentials: this._credentials,
     });
   }
 
   patchUserInfo(data) {
-    return this._request(`${this._url}/users/me`, {
+    return this._request(`${this._url}users/me`, {
       method: "PATCH",
       headers: this._headers,
       credentials: this._credentials,
@@ -40,7 +40,7 @@ class Api {
   }
 
   postNewCard(data) {
-    return this._request(`${this._url}/cards`, {
+    return this._request(`${this._url}cards`, {
       method: "POST",
       headers: this._headers,
       credentials: this._credentials,
@@ -52,7 +52,7 @@ class Api {
   }
 
   deleteCard(cardId) {
-    return this._request(`${this._url}/cards/${cardId}`, {
+    return this._request(`${this._url}cards/${cardId}`, {
       method: "DELETE",
       headers: this._headers,
       credentials: this._credentials,
@@ -60,7 +60,7 @@ class Api {
   }
 
   putLikeCard(cardId) {
-    return this._request(`${this._url}/cards/${cardId}/likes`, {
+    return this._request(`${this._url}cards/${cardId}/likes`, {
       method: "PUT",
       headers: this._headers,
       credentials: this._credentials,
@@ -68,25 +68,27 @@ class Api {
   }
 
   deleteLikeCard(cardId) {
-    return this._request(`${this._url}/cards/${cardId}/likes`, {
+    return this._request(`${this._url}cards/${cardId}/likes`, {
       method: "DELETE",
       headers: this._headers,
       credentials: this._credentials,
     });
   }
 
-  patchUserAvatar(avatar) {
-    return this._request(`${this._url}/users/me/avatar`, {
+  patchUserAvatar(data) {
+    return this._request(`${this._url}users/me/avatar`, {
       method: "PATCH",
       headers: this._headers,
       credentials: this._credentials,
-      body: JSON.stringify(avatar),
+      body: JSON.stringify({
+        avatar: data.avatar,
+      }),
     });
   }
 }
 
 export const api = new Api({
-  url: "https://api.mesto.innatsymbal.nomoredomainsrocks.ru",
+  url: "https://api.mesto.innatsymbal.nomoredomainsrocks.ru/",
   headers: {
     "Content-Type": "application/json",
   },

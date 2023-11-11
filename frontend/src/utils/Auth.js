@@ -4,25 +4,25 @@ const checkResponse = (res) => {
   return res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`)
 }
 
-export const register = (email, password) => {
+export const register = (password, email) => {
   return fetch(`${url}/signup`, {
     method: "POST",
     headers: {
       "Accept": "application/json",
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({email, password}),
+    body: JSON.stringify({password, email}),
   }).then(checkResponse)
 };
 
-export const login = (email, password) => {
+export const login = (password, email) => {
   return fetch(`${url}/signin`, {
     method: "POST",
     headers: {
       "Accept": "application/json",
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({email, password}),
+    body: JSON.stringify({password, email}),
   }).then(checkResponse)
 };
 

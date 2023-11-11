@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
-
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import { api } from "../utils/Api.js";
 import Header from "./Header.js";
 import Main from "./Main.js";
 import Footer from "./Footer.js";
@@ -13,12 +14,7 @@ import Login from "./Login.js";
 import Register from "./Register.js";
 import ProtectedRoute from "./ProtectedRoute.js";
 import InfoTooltip from "./InfoTooltip.js";
-
-import { api } from "../utils/Api.js";
 import * as auth from "../utils/Auth.js";
-
-import { CurrentUserContext } from "../contexts/CurrentUserContext";
-
 
 function App() {
   const navigate = useNavigate();
@@ -48,6 +44,7 @@ function App() {
           console.log(userData, cards);
           setCurrentUser(userData);
           setCards(cards);
+          setUserEmail(userData.email);
         })
         .catch((err) => console.log(err));
     }
@@ -187,9 +184,9 @@ function App() {
       });
   };
 
-  function handleRegister(email, password) {
+  function handleRegister({ password, email }) {
     setIsProcessStatus(true);
-    auth.register(email, password)
+    auth.register(password, email)
       .then(() => {
         setIsAuthStatus(true);
         navigate("/sign-in", { replace: true });
@@ -210,9 +207,9 @@ function App() {
       });
   }
 
-  function handleLogin(email, password) {
+  function handleLogin({ password, email }) {
     setIsProcessStatus(true);
-    auth.login(email, password)
+    auth.login(password, email)
       .then((res) => {
         setIsLoggedIn(true);
         setUserEmail(email);
