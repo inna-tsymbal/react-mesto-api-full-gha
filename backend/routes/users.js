@@ -15,7 +15,7 @@ const {
 
 router.get('/', getUsers);
 router.get('/me', getUser);
-router.get('/:userId', validateGetUserById, getUserById);
+router.get('/:id', validateGetUserById, getUserById);
 router.patch('/me', validateUpdateUser, updateUser);
 router.patch('/me/avatar', validateUpdateAvatar, updateAvatar);
 

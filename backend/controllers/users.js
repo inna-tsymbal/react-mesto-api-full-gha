@@ -8,8 +8,8 @@ const ConflictError = require('../errors/ConflictError');
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 module.exports.login = (req, res, next) => {
-  const { email, password } = req.body;
-  return User.findUserByCredentials(email, password)
+  const { password, email } = req.body;
+  return User.findUserByCredentials(password, email)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'key8d4fs8-0jOp3', { expiresIn: '7d' });
       res.cookie('jwt', token, {
@@ -40,7 +40,7 @@ module.exports.getUser = (req, res, next) => {
 };
 
 module.exports.getUserById = (req, res, next) => {
-  User.findById(req.params.userId)
+  User.findById(req.params.id)
     .orFail(new NotFoundError('Пользователь по указанному id не найден'))
     .then((user) => res.send(user))
     .catch((err) => {
@@ -53,11 +53,15 @@ module.exports.getUserById = (req, res, next) => {
 
 module.exports.createUser = (req, res, next) => {
   const {
-    email, password, name, about, avatar,
+    name, about, avatar, password, email,
   } = req.body;
   bcrypt.hash(password, 10)
     .then((hash) => User.create({
-      email, password: hash, name, about, avatar,
+      name,
+      about,
+      avatar,
+      password: hash,
+      email,
     }))
     .then(() => res.status(201).send({
       email,
