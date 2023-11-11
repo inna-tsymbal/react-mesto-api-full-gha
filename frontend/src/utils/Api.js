@@ -27,21 +27,27 @@ class Api {
     });
   }
 
-  patchUserInfo({ name, about }) {
+  patchUserInfo(data) {
     return this._request(`${this._url}users/me`, {
       method: "PATCH",
       headers: this._headers,
       credentials: this._credentials,
-      body: JSON.stringify({ name, about }),
+      body: JSON.stringify({
+        name: data.name,
+        about: data.about,
+      }),
     });
   }
 
-  postNewCard({ name, link }) {
+  postNewCard(data) {
     return this._request(`${this._url}cards`, {
       method: "POST",
       headers: this._headers,
       credentials: this._credentials,
-      body: JSON.stringify({ name, link }),
+      body: JSON.stringify({
+        name: data.name,
+        link: data.link,
+      }),
     });
   }
 
@@ -69,12 +75,14 @@ class Api {
     });
   }
 
-  patchUserAvatar({ avatar }) {
+  patchUserAvatar(data) {
     return this._request(`${this._url}users/me/avatar`, {
       method: "PATCH",
       headers: this._headers,
       credentials: this._credentials,
-      body: JSON.stringify({ avatar }),
+      body: JSON.stringify({
+        avatar: data.avatar,
+      }),
     });
   }
 }

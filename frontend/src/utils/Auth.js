@@ -11,10 +11,7 @@ export const register = (password, email) => {
       "Accept": "application/json",
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      password: password,
-      email: email
-    }),
+    body: JSON.stringify({password, email}),
   }).then(checkResponse)
 };
 
@@ -25,11 +22,7 @@ export const login = (password, email) => {
       "Accept": "application/json",
       "Content-Type": "application/json",
     },
-    credentials: 'include',
-    body: JSON.stringify({
-      password: password,
-      email: email
-    }),
+    body: JSON.stringify({password, email}),
   }).then(checkResponse)
 };
 

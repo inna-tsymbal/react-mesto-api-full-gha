@@ -67,9 +67,9 @@ function App() {
   }
 
   const handleSignOut = () => {
-    localStorage.removeItem("jwt");
-    setUserEmail("");
     setIsLoggedIn(false);
+    localStorage.removeItem("jwt");
+    navigate('/sign-in');
   };
 
   const handleEditAvatarClick = () => {
@@ -184,7 +184,7 @@ function App() {
       });
   };
 
-  function handleRegister({password, email}) {
+  function handleRegister({ password, email }) {
     setIsProcessStatus(true);
     auth.register(password, email)
       .then(() => {
@@ -207,14 +207,14 @@ function App() {
       });
   }
 
-  function handleLogin({password, email}) {
+  function handleLogin({ password, email }) {
     setIsProcessStatus(true);
     auth.login(password, email)
-      .then((data) => {
+      .then((res) => {
         setIsLoggedIn(true);
         setUserEmail(email);
         navigate("/", { replace: true });
-        localStorage.setItem('jwtM', true);
+        localStorage.setItem('jwt', res.token);
       })
       .catch((err) => {
         console.log(err);
