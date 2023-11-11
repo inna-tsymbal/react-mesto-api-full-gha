@@ -33,37 +33,38 @@ function App() {
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   checkToken();
-  // }, [])
+  useEffect(() => {
+    checkToken();
+  }, [])
   
   useEffect(() => {
-    isLoggedIn &&
+    if (isLoggedIn) {
       Promise.all([api.getUserInfo(), api.getInitialCards()])
         .then(([userData, cards]) => {
-          // console.log(userData, cards);
+          console.log(userData, cards);
           setCurrentUser(userData);
           setCards(cards);
           setUserEmail(userData.email);
         })
         .catch((err) => console.log(err));
+      }
   }, [isLoggedIn]);
 
-  // const checkToken = () => {
-  //   const jwt = localStorage.getItem('jwtM');
-  //   if (jwt) {
-  //     auth.checkToken()
-  //     .then((res) => {
-  //       if (res) {
-  //         setIsLoggedIn(true);
-  //         navigate("/", {replace: true})
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }
-  // }
+  const checkToken = () => {
+    const jwt = localStorage.getItem('jwtM');
+    if (jwt) {
+      auth.checkToken()
+      .then((res) => {
+        if (res) {
+          setIsLoggedIn(true);
+          navigate("/", {replace: true})
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+  }
 
   const handleRegister = (email, password) => {
     setIsProcessStatus(true);
@@ -108,16 +109,9 @@ function App() {
       .finally(() => setIsProcessStatus(false));
   }
   const handleSignOut = () => {
-    auth.logout()
-    .then(() => {
-      setIsLoggedIn(false);
-      setUserEmail("");
-      // localStorage.removeItem("jwt");
-      navigate('/sign-in', {replace: true});
-    })
-    .catch((err) => {
-      console.log(err);
-    })
+    localStorage.removeItem("jwtM");
+    setUserEmail("");
+    setIsLoggedIn(false);
   };
 
   const handleEditAvatarClick = () => {

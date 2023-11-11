@@ -6,34 +6,29 @@ class Api {
   }
   
   _checkResponse(res) {
-    if(res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка получения ответа от сервера: ${res.status}`)
+    return res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`)
   }
 
-  // _request(url, options) {
-  //   return fetch(url, options).then(this._checkResponse);
-  // }
+  _request(url, options) {
+    return fetch(url, options).then(this._checkResponse);
+  }
 
   getUserInfo() {
-    return fetch(`${this._url}/users/me`, {
+    return this._request(`${this._url}/users/me`, {
       headers: this._headers,
       credentials: this._credentials,
-    })
-    .then(this._checkResponse);
+    });
   }
 
   getInitialCards() {
-    return fetch(`${this._url}/cards`, {
+    return this._request(`${this._url}/cards`, {
       headers: this._headers,
       credentials: this._credentials,
-    })
-    .then(this._checkResponse);
+    });
   }
 
   patchUserInfo(data) {
-    return fetch(`${this._url}/users/me`, {
+    return this._request(`${this._url}/users/me`, {
       method: "PATCH",
       headers: this._headers,
       credentials: this._credentials,
@@ -42,11 +37,10 @@ class Api {
         about: data.about,
       }),
     })
-    .then(this._checkResponse);
   }
 
   postNewCard(data) {
-    return fetch(`${this._url}/cards`, {
+    return this._request(`${this._url}/cards`, {
       method: "POST",
       headers: this._headers,
       credentials: this._credentials,
@@ -54,45 +48,40 @@ class Api {
         name: data.name,
         link: data.link,
       }),
-    })
-    .then(this._checkResponse);
+    });
   }
 
   deleteCard(cardId) {
-    return fetch(`${this._url}/cards/${cardId}`, {
+    return this._request(`${this._url}/cards/${cardId}`, {
       method: "DELETE",
       headers: this._headers,
       credentials: this._credentials,
-    })
-    .then(this._checkResponse);
+    });
   }
 
   putLikeCard(cardId) {
-    return fetch(`${this._url}/cards/${cardId}/likes`, {
+    return this._request(`${this._url}/cards/${cardId}/likes`, {
       method: "PUT",
       headers: this._headers,
       credentials: this._credentials,
-    })
-    .then(this._checkResponse);
+    });
   }
 
   deleteLikeCard(cardId) {
-    return fetch(`${this._url}/cards/${cardId}/likes`, {
+    return this._request(`${this._url}/cards/${cardId}/likes`, {
       method: "DELETE",
       headers: this._headers,
       credentials: this._credentials,
-    })
-    .then(this._checkResponse);
+    });
   }
 
   patchUserAvatar(avatar) {
-    return fetch(`${this._url}/users/me/avatar`, {
+    return this._request(`${this._url}/users/me/avatar`, {
       method: "PATCH",
       headers: this._headers,
       credentials: this._credentials,
       body: JSON.stringify(avatar),
-    })
-    .then(this._checkResponse);
+    });
   }
 }
 

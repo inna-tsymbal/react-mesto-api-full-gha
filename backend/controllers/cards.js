@@ -5,16 +5,13 @@ const ForbiddenError = require('../errors/ForbiddenError');
 
 module.exports.getCards = (req, res, next) => {
   Card.find({})
-    .populate(['owner', 'likes'])
-    .then((cards) => res.status(200).send(cards.reverse()))
+    .then((cards) => res.status(200).send(cards))
     .catch(next);
 };
 
 module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
-  const owner = req.user._id;
-  Card.create({ name, link, owner })
-    .then((card) => card.populate('owner'))
+  Card.create({ name, link, owner: req.user._id })
     .then((card) => res.status(201).send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -32,10 +29,12 @@ module.exports.deleteCard = (req, res, next) => {
   Card.findById(cardId)
     .orFail(new NotFoundError('Карточка с указанным id не найдена'))
     .then((card) => {
-      if (card.owner.toString() !== req.user._id) {
-        throw new ForbiddenError('Разрешено удалять только свои карточки');
+      if (card.owner.equals(req.user._id)) {
+        return Card.deleteOne(card)
+          .then(() => res.send({ message: 'Карточка удалена' }))
+          .catch(next);
       }
-      return Card.deleteOne({ _id: cardId });
+      throw new ForbiddenError('Удалить карточку с указанным _id нельзя');
     })
     .catch((err) => {
       if (err.name === 'CastError') {
