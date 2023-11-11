@@ -18,7 +18,6 @@ export const register = (email, password) => {
 export const login = (email, password) => {
   return fetch(`${url}/signin`, {
     method: "POST",
-    credentials: 'include',
     headers: {
       "Accept": "application/json",
       "Content-Type": "application/json",
@@ -37,7 +36,6 @@ export const logout = () => {
     }).then(checkResponse)
 }
 
-// проверка токена 
 // export const checkToken = (token) => {
 //   return fetch(`${url}/users/me`, {
 //     credentials: 'include',

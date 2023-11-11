@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
-import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
+
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 import Header from "./Header.js";
 import Main from "./Main.js";
 import Footer from "./Footer.js";
-
-import ImagePopup from "./ImagePopup.js";
 import EditProfilePopup from "./EditProfilePopup.js";
 import EditAvatarPopup from "./EditAvatarPopup.js";
 import AddPlacePopup from "./AddPlacePopup.js";
+import ImagePopup from "./ImagePopup.js";
 import DeleteImagePopup from "./DeleteImagePopup.js";
-
 import Login from "./Login.js";
 import Register from "./Register.js";
 import ProtectedRoute from "./ProtectedRoute.js";
@@ -19,49 +19,35 @@ import InfoTooltip from "./InfoTooltip.js";
 import { api } from "../utils/Api.js";
 import * as auth from "../utils/Auth.js";
 
-import CurrentUserContext from "../contexts/CurrentUserContext.js";
-
-
 function App() {
-  // создаём пустой массив для карточек, которые придут с сервера
-  const [cards, setCards] = useState([]);
-
- // создаём переменные, отвечающие за видимость попапов
+  const navigate = useNavigate();
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = useState(false);
+  const [selectedCard, setSelectedCard] = useState({});
   const [isDeleteImagePopupOpen, setDeleteImagePopupOpen] = useState({});
-  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
-  
+  const [cards, setCards] = useState([]);
+  const [currentUser, setCurrentUser] = useState({});
+
+  const [email, setUserEmail] = useState("");
+  const [popupMessageStatus, setPopupMessageStatus] = useState({ message: "" });
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAuthStatus, setIsAuthStatus] = useState(false);
   const [isProcessStatus, setIsProcessStatus] = useState(false);
-
- // создаём стейт-переменную для открытия popupWithImage
-  const [selectedCard, setSelectedCard] = useState(null);
-
-  const [currentUser, setCurrentUser] = useState({}); // не знаю что это
-
-  // стейт для отображения e-mail пользователя
-  const [userEmail, setUserEmail] = useState("");
-
-  const [popupMessageStatus, setPopupMessageStatus] = useState({ message: "" }); // не знаю что это
-
-  // записываем хук в переменную для получения доступа к его свойствам
-  const navigate = useNavigate();
-
-  //создаём стейт для проверки пользователя на авторизацию
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
 
   // useEffect(() => {
   //   checkToken();
   // }, [])
   
   useEffect(() => {
-    isLoggedIn && 
+    isLoggedIn &&
       Promise.all([api.getUserInfo(), api.getInitialCards()])
-        .then(([userData, cardsData]) => {
+        .then(([userData, cards]) => {
+          // console.log(userData, cards);
           setCurrentUser(userData);
-          setCards(cardsData);
+          setCards(cards);
+          setUserEmail(userData.email);
         })
         .catch((err) => console.log(err));
   }, [isLoggedIn]);
@@ -85,7 +71,7 @@ function App() {
   const handleRegister = (email, password) => {
     setIsProcessStatus(true);
     auth.register(email, password)
-      .then((res) => {
+      .then(() => {
         setIsAuthStatus(true);
         navigate("/sign-in", { replace: true });
         setPopupMessageStatus({
@@ -93,11 +79,11 @@ function App() {
         });
       })
       .catch((err) => {
+        console.log(err);
         setPopupMessageStatus({
           text: "Что-то пошло не так! Попробуйте ещё раз.",
         });
         setIsAuthStatus(false);
-
       })
       .finally(() => {
         setIsInfoTooltipOpen(true);
@@ -105,11 +91,11 @@ function App() {
       });
   }
 
-  const handleLogin = (email, password) => {
+  const handleLogin  = (email, password) => {
     setIsProcessStatus(true);
     auth.login(email, password)
       .then((res) => {
-        (true);
+        setIsLoggedIn(true);
         setUserEmail(email);
         navigate("/", { replace: true });
         // localStorage.setItem('jwt', res.token);
@@ -124,12 +110,12 @@ function App() {
       })
       .finally(() => setIsProcessStatus(false));
   }
-
   const handleSignOut = () => {
     auth.logout()
     .then(() => {
       setIsLoggedIn(false);
-      setUserEmail('');
+      setUserEmail("");
+      // localStorage.removeItem("jwt");
       navigate('/sign-in', {replace: true});
     })
     .catch((err) => {
@@ -158,7 +144,7 @@ function App() {
   };
 
   const handleCardLike = (card) => {
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    const isLiked = card.likes.some((i) => i._id === currentUser._id);
 
     if (!isLiked) {
       api
@@ -201,10 +187,10 @@ function App() {
       });
   };
 
-  const handleUpdateAvatar = (avatar) => {
+  const handleUpdateAvatar = ({ avatar }) => {
     setIsProcessStatus(true);
     api
-      .patchUserAvatar(avatar)
+      .patchUserAvatar({ avatar })
       .then((newAvatar) => {
         setCurrentUser(newAvatar);
         closeAllPopups();
@@ -253,7 +239,7 @@ function App() {
     setEditAvatarPopupOpen(false);
     setEditProfilePopupOpen(false);
     setAddPlacePopupOpen(false);
-    setSelectedCard(null);
+    setSelectedCard({});
     setDeleteImagePopupOpen({});
     setIsInfoTooltipOpen(false);
   };
@@ -267,8 +253,8 @@ function App() {
             path="/"
             element={
               <ProtectedRoute
+                element={Main}
                 isLoggedIn={isLoggedIn}
-                Component={Main}
                 onEditAvatar={handleEditAvatarClick}
                 onEditProfile={handleEditProfileClick}
                 onAddPlace={handleAddPlaceClick}

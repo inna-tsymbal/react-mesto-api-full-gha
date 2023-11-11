@@ -4,31 +4,36 @@ class Api {
     this._headers = headers;
     this._credentials = credentials;
   }
-
+  
   _checkResponse(res) {
-    return res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`)
+    if(res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Ошибка получения ответа от сервера: ${res.status}`)
   }
 
-  _request(url, options) {
-    return fetch(url, options).then(this._checkResponse);
-  }
+  // _request(url, options) {
+  //   return fetch(url, options).then(this._checkResponse);
+  // }
 
   getUserInfo() {
-    return this._request(`${this._url}/users/me`, {
+    return fetch(`${this._url}/users/me`, {
       headers: this._headers,
       credentials: this._credentials,
-    });
+    })
+    .then(this._checkResponse.bind(this));
   }
 
   getInitialCards() {
-    return this._request(`${this._url}/cards`, {
+    return fetch(`${this._url}/cards`, {
       headers: this._headers,
       credentials: this._credentials,
-    });
+    })
+    .then(this._checkResponse.bind(this));
   }
 
   patchUserInfo(data) {
-    return this._request(`${this._url}/users/me`, {
+    return fetch(`${this._url}/users/me`, {
       method: "PATCH",
       headers: this._headers,
       credentials: this._credentials,
@@ -36,11 +41,12 @@ class Api {
         name: data.name,
         about: data.about,
       }),
-    });
+    })
+    .then(this._checkResponse.bind(this));
   }
 
   postNewCard(data) {
-    return this._request(`${this._url}/cards`, {
+    return fetch(`${this._url}/cards`, {
       method: "POST",
       headers: this._headers,
       credentials: this._credentials,
@@ -48,40 +54,45 @@ class Api {
         name: data.name,
         link: data.link,
       }),
-    });
+    })
+    .then(this._checkResponse.bind(this));
   }
 
   deleteCard(cardId) {
-    return this._request(`${this._url}/cards/${cardId}`, {
+    return fetch(`${this._url}/cards/${cardId}`, {
       method: "DELETE",
       headers: this._headers,
       credentials: this._credentials,
-    });
+    })
+    .then(this._checkResponse.bind(this));
   }
 
   putLikeCard(cardId) {
-    return this._request(`${this._url}/cards/${cardId}/likes`, {
+    return fetch(`${this._url}/cards/${cardId}/likes`, {
       method: "PUT",
       headers: this._headers,
       credentials: this._credentials,
-    });
+    })
+    .then(this._checkResponse.bind(this));
   }
 
   deleteLikeCard(cardId) {
-    return this._request(`${this._url}/cards/${cardId}/likes`, {
+    return fetch(`${this._url}/cards/${cardId}/likes`, {
       method: "DELETE",
       headers: this._headers,
       credentials: this._credentials,
-    });
+    })
+    .then(this._checkResponse.bind(this));
   }
 
   patchUserAvatar(avatar) {
-    return this._request(`${this._url}/users/me/avatar`, {
+    return fetch(`${this._url}/users/me/avatar`, {
       method: "PATCH",
       headers: this._headers,
       credentials: this._credentials,
       body: JSON.stringify(avatar),
-    });
+    })
+    .then(this._checkResponse.bind(this));
   }
 }
 
@@ -89,7 +100,6 @@ export const api = new Api({
   url: "https://api.mesto.innatsymbal.nomoredomainsrocks.ru",
   headers: {
     "Content-Type": "application/json",
-    'Accept': 'application/json',
   },
   credentials: 'include',
 });
