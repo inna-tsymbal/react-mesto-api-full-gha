@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
-
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
-
 import Header from "./Header.js";
 import Main from "./Main.js";
 import Footer from "./Footer.js";
@@ -15,12 +13,10 @@ import Login from "./Login.js";
 import Register from "./Register.js";
 import ProtectedRoute from "./ProtectedRoute.js";
 import InfoTooltip from "./InfoTooltip.js";
-
 import { api } from "../utils/Api.js";
 import * as auth from "../utils/Auth.js";
 
 function App() {
-  const navigate = useNavigate();
   const [isEditAvatarPopupOpen, setEditAvatarPopupOpen] = useState(false);
   const [isEditProfilePopupOpen, setEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setAddPlacePopupOpen] = useState(false);
@@ -35,6 +31,7 @@ function App() {
   const [isAuthStatus, setIsAuthStatus] = useState(false);
   const [isProcessStatus, setIsProcessStatus] = useState(false);
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
+  const navigate = useNavigate();
 
   // useEffect(() => {
   //   checkToken();

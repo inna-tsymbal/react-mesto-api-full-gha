@@ -21,7 +21,7 @@ class Api {
       headers: this._headers,
       credentials: this._credentials,
     })
-    .then(this._checkResponse.bind(this));
+    .then(this._checkResponse);
   }
 
   getInitialCards() {
@@ -29,7 +29,7 @@ class Api {
       headers: this._headers,
       credentials: this._credentials,
     })
-    .then(this._checkResponse.bind(this));
+    .then(this._checkResponse);
   }
 
   patchUserInfo(data) {
@@ -42,7 +42,7 @@ class Api {
         about: data.about,
       }),
     })
-    .then(this._checkResponse.bind(this));
+    .then(this._checkResponse);
   }
 
   postNewCard(data) {
@@ -55,7 +55,7 @@ class Api {
         link: data.link,
       }),
     })
-    .then(this._checkResponse.bind(this));
+    .then(this._checkResponse);
   }
 
   deleteCard(cardId) {
@@ -64,7 +64,7 @@ class Api {
       headers: this._headers,
       credentials: this._credentials,
     })
-    .then(this._checkResponse.bind(this));
+    .then(this._checkResponse);
   }
 
   putLikeCard(cardId) {
@@ -73,7 +73,7 @@ class Api {
       headers: this._headers,
       credentials: this._credentials,
     })
-    .then(this._checkResponse.bind(this));
+    .then(this._checkResponse);
   }
 
   deleteLikeCard(cardId) {
@@ -82,7 +82,7 @@ class Api {
       headers: this._headers,
       credentials: this._credentials,
     })
-    .then(this._checkResponse.bind(this));
+    .then(this._checkResponse);
   }
 
   patchUserAvatar(avatar) {
@@ -92,11 +92,17 @@ class Api {
       credentials: this._credentials,
       body: JSON.stringify(avatar),
     })
-    .then(this._checkResponse.bind(this));
+    .then(this._checkResponse);
   }
 }
 
 export const api = new Api({
+  //url: "https://mesto.nomoreparties.co/v1/cohort-69",
+  //headers: {
+      //authorization: "e7ba1a9e-f2b7-42f1-b3b7-db01471a0a76",
+      //"Content-Type": "application/json",
+  //}
+  //url: "http://localhost:3000",
   url: "https://api.mesto.innatsymbal.nomoredomainsrocks.ru",
   headers: {
     "Content-Type": "application/json",
