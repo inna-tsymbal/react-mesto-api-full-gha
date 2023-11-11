@@ -1,5 +1,3 @@
-const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
-
 const allowedCors = [
   'https://mesto.innatsymbal.nomoredomainsrocks.ru',
   'http://mesto.innatsymbal.nomoredomainsrocks.ru',
@@ -9,11 +7,10 @@ const allowedCors = [
   'http://localhost:3000',
 ];
 
-module.exports = (req, res, next) => {
+const cors = (req, res, next) => {
   const { origin } = req.headers;
-
   const { method } = req;
-
+  const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
   const requestHeaders = req.headers['access-control-request-headers'];
 
   res.header('Access-Control-Allow-Credentials', true);
@@ -30,3 +27,5 @@ module.exports = (req, res, next) => {
 
   return next();
 };
+
+module.exports = cors;
