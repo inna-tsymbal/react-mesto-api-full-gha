@@ -1,6 +1,3 @@
-//export const BASE_URL = 'https://auth.nomoreparties.co';
-//export const BASE_URL = 'http://localhost:3000';
-
 export const url = "https://api.mesto.innatsymbal.nomoredomainsrocks.ru";
 
 const checkResponse = (res) => {
@@ -34,16 +31,6 @@ export const login = (email, password) => {
     }),
   }).then(checkResponse)
 };
-
-// export const logout = () => {
-//   return fetch(`${url}/signout`, {
-//     credentials: 'include',
-//     headers: {
-//       "Accept": "application/json",
-//       "Content-Type": "application/json",
-//     },
-//     }).then(checkResponse)
-// }
 
 export const checkToken = () => {
   return fetch(`${url}/users/me`, {
