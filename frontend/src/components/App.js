@@ -24,6 +24,7 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({});
   const [isDeleteImagePopupOpen, setDeleteImagePopupOpen] = useState({});
   const [cards, setCards] = useState([]);
+  // const [deleteCardId, setDeleteCardId] = useState("");
   const [currentUser, setCurrentUser] = useState({});
 
   const [email, setUserEmail] = useState("");
@@ -36,12 +37,12 @@ function App() {
 
   useEffect(() => {
     checkToken();
-  }, [isLoggedIn, email])
+  }, [navigate])
   
   useEffect(() => {
-    isLoggedIn ? navigate("/") : navigate("/sign-in");
+    // isLoggedIn ? navigate("/") : navigate("/sign-in");
     if (isLoggedIn) {
-      Promise.all([api.getUserInfo(), api.getInitialCards()])
+      Promise.all([api.getUserInfo(localStorage.jwt), api.getInitialCards(localStorage.jwt)])
         .then(([userData, cards]) => {
           console.log(userData, cards);
           setCurrentUser(userData);
@@ -53,14 +54,14 @@ function App() {
   }, [isLoggedIn]);
 
   const checkToken = () => {
-    if (localStorage.getItem('jwt')) {
-      const jwt = localStorage.getItem("jwt");
-      auth.checkToken(jwt)
+    if (localStorage.jwt) {
+      // const jwt = localStorage.getItem("jwt");
+      auth.checkToken(localStorage.jwt)
       .then((res) => {
         if (res) {
           setIsLoggedIn(true);
           navigate("/", {replace: true});
-          setCurrentUser(res);
+          // setCurrentUser(res);
           setUserEmail(res.email);
         }
       })
@@ -112,8 +113,9 @@ function App() {
       })
       .finally(() => setIsProcessStatus(false));
   }
+
   const handleSignOut = () => {
-    localStorage.removeItem("jwtM");
+    localStorage.removeItem("jwt");
     setUserEmail("");
     setCurrentUser({});
     setIsLoggedIn(false);
@@ -140,11 +142,11 @@ function App() {
   };
 
   const handleCardLike = (card) => {
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const isLiked = card.likes.some(i => i === currentUser._id);
 
     if (!isLiked) {
       api
-        .putLikeCard(card._id)
+        .putLikeCard(card._id, localStorage.jwt)
         .then((newCard) => {
           setCards((state) =>
             state.map((c) => (c._id === card._id ? newCard : c))
@@ -155,7 +157,7 @@ function App() {
         });
     } else {
       api
-        .deleteLikeCard(card._id)
+        .deleteLikeCard(card._id, localStorage.jwt)
         .then((newCard) => {
           setCards((state) =>
             state.map((c) => (c._id === card._id ? newCard : c))
@@ -170,7 +172,7 @@ function App() {
   const handleUpdateUser = ({ name, about }) => {
     setIsProcessStatus(true);
     api
-      .patchUserInfo({ name, about })
+      .patchUserInfo({ name, about }, localStorage.jwt)
       .then((newUser) => {
         setCurrentUser(newUser);
         closeAllPopups();
@@ -186,7 +188,7 @@ function App() {
   const handleUpdateAvatar = ({ avatar }) => {
     setIsProcessStatus(true);
     api
-      .patchUserAvatar({ avatar })
+      .patchUserAvatar({ avatar }, localStorage.jwt)
       .then((newAvatar) => {
         setCurrentUser(newAvatar);
         closeAllPopups();
@@ -202,7 +204,7 @@ function App() {
   const handleAddPlaceSubmit = ({ name, link }) => {
     setIsProcessStatus(true);
     api
-      .postNewCard({ name, link })
+      .postNewCard({ name, link }, localStorage.jwt)
       .then((newCard) => {
         setCards([newCard, ...cards]);
         closeAllPopups();
@@ -215,12 +217,15 @@ function App() {
       });
   };
 
-  const handleCardDelete = (card) => {
+  const handleCardDelete = (deleteCardId) => {
     setIsProcessStatus(true);
     api
-      .deleteCard(card._id)
+      .deleteCard(deleteCardId, localStorage.jwt)
       .then(() => {
-        setCards((items) => items.filter((c) => c._id !== card._id && c));
+        setCards((items) => items.filter((card) => {
+          return card._id !== deleteCardId
+        })
+        );
         closeAllPopups();
       })
       .catch((err) => {

@@ -19,7 +19,7 @@ export default function Card({ card, onCardClick, onCardLike, onCardDelete }) {
   }
 
   function handleDeleteClick() {
-    onCardDelete({ _id: card._id });
+    onCardDelete(card._id);
   }
 
   function handleClick() {
