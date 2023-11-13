@@ -1,7 +1,7 @@
 class Api {
-  constructor({ url, headers, credentials }) {
+  constructor({ url, credentials }) {
     this._url = url;
-    this._headers = headers;
+    // this._headers = headers;
     this._credentials = credentials;
   }
   
@@ -14,23 +14,33 @@ class Api {
   }
 
   getUserInfo() {
+    const token = localStorage.getItem("jwt");
     return this._request(`${this._url}/users/me`, {
-      headers: this._headers,
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
       credentials: this._credentials,
     });
   }
 
   getInitialCards() {
+    const token = localStorage.getItem("jwt");
     return this._request(`${this._url}/cards`, {
-      headers: this._headers,
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
       credentials: this._credentials,
     });
   }
 
   patchUserInfo(data) {
+    const token = localStorage.getItem("jwt");
     return this._request(`${this._url}/users/me`, {
       method: "PATCH",
-      headers: this._headers,
+      headers: {
+        authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
       credentials: this._credentials,
       body: JSON.stringify({
         name: data.name,
@@ -40,9 +50,13 @@ class Api {
   }
 
   postNewCard(data) {
+    const token = localStorage.getItem("jwt");
     return this._request(`${this._url}/cards`, {
       method: "POST",
-      headers: this._headers,
+      headers: {
+        authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
       credentials: this._credentials,
       body: JSON.stringify({
         name: data.name,
@@ -52,33 +66,49 @@ class Api {
   }
 
   deleteCard(cardId) {
+    const token = localStorage.getItem("jwt");
     return this._request(`${this._url}/cards/${cardId}`, {
       method: "DELETE",
-      headers: this._headers,
+      headers: {
+        authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
       credentials: this._credentials,
     });
   }
 
   putLikeCard(cardId) {
+    const token = localStorage.getItem("jwt");
     return this._request(`${this._url}/cards/${cardId}/likes`, {
       method: "PUT",
-      headers: this._headers,
+      headers: {
+        authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
       credentials: this._credentials,
     });
   }
 
   deleteLikeCard(cardId) {
+    const token = localStorage.getItem("jwt");
     return this._request(`${this._url}/cards/${cardId}/likes`, {
       method: "DELETE",
-      headers: this._headers,
+      headers: {
+        authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
       credentials: this._credentials,
     });
   }
 
   patchUserAvatar(avatar) {
+    const token = localStorage.getItem("jwt");
     return this._request(`${this._url}/users/me/avatar`, {
       method: "PATCH",
-      headers: this._headers,
+      headers: {
+        authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
       credentials: this._credentials,
       body: JSON.stringify(avatar),
     });
@@ -87,8 +117,8 @@ class Api {
 
 export const api = new Api({
   url: "https://api.mesto.innatsymbal.nomoredomainsrocks.ru",
-  headers: {
-    "Content-Type": "application/json",
-  },
+  // headers: {
+  //   "Content-Type": "application/json",
+  // },
   credentials: 'include',
 });

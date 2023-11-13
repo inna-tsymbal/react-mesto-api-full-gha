@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
@@ -35,29 +36,32 @@ function App() {
 
   useEffect(() => {
     checkToken();
-  }, [])
+  }, [isLoggedIn, email])
   
   useEffect(() => {
+    isLoggedIn ? navigate("/") : navigate("/sign-in");
     if (isLoggedIn) {
       Promise.all([api.getUserInfo(), api.getInitialCards()])
         .then(([userData, cards]) => {
           console.log(userData, cards);
           setCurrentUser(userData);
           setCards(cards);
-          setUserEmail(userData.email);
+          // setUserEmail(userData.email);
         })
         .catch((err) => console.log(err));
       }
   }, [isLoggedIn]);
 
   const checkToken = () => {
-    const jwt = localStorage.getItem('jwtM');
-    if (jwt) {
-      auth.checkToken()
+    if (localStorage.getItem('jwt')) {
+      const jwt = localStorage.getItem("jwt");
+      auth.checkToken(jwt)
       .then((res) => {
         if (res) {
           setIsLoggedIn(true);
-          navigate("/", {replace: true})
+          navigate("/", {replace: true});
+          setCurrentUser(res);
+          setUserEmail(res.email);
         }
       })
       .catch((err) => {
@@ -96,7 +100,7 @@ function App() {
         setIsLoggedIn(true);
         setUserEmail(email);
         navigate("/", { replace: true });
-        // localStorage.setItem('jwt', res.token);
+        localStorage.setItem('jwt', res.token);
       })
       .catch((err) => {
         console.log(err);
@@ -111,6 +115,7 @@ function App() {
   const handleSignOut = () => {
     localStorage.removeItem("jwtM");
     setUserEmail("");
+    setCurrentUser({});
     setIsLoggedIn(false);
   };
 
